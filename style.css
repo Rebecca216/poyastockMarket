@@ -37,6 +37,12 @@
   --chip-bg: rgba(255, 255, 255, 0.06);
   --chip-hover-bg: rgba(255, 255, 255, 0.14);
   
+  --search-bar-bg: #151d2f;
+  --tag-twse: #38bdf8;
+  --tag-twse-bg: rgba(56, 189, 248, 0.15);
+  --tag-tpex: #a855f7;
+  --tag-tpex-bg: rgba(168, 85, 247, 0.15);
+  
   --shadow-card: 0 10px 30px -10px rgba(0, 0, 0, 0.5), 0 0 1px 1px rgba(255, 255, 255, 0.05);
   --modal-bg: #181d2d;
   --toast-bg: #1e293b;
@@ -87,6 +93,12 @@
   --chip-bg: #f1f5f9;
   --chip-hover-bg: #e2e8f0;
   
+  --search-bar-bg: #ffffff;
+  --tag-twse: #0284c7;
+  --tag-twse-bg: #e0f2fe;
+  --tag-tpex: #7e22ce;
+  --tag-tpex-bg: #f3e8ff;
+  
   --shadow-card: 0 4px 20px -2px rgba(0, 0, 0, 0.08), 0 2px 6px -1px rgba(0, 0, 0, 0.04);
   --modal-bg: #ffffff;
   --toast-bg: #ffffff;
@@ -110,7 +122,9 @@ body {
   overflow-x: hidden;
 }
 
-/* Header */
+/* ==========================================================================
+   Header Styles
+   ========================================================================== */
 .header {
   background: var(--bg-secondary);
   border-bottom: 1px solid var(--border-color);
@@ -151,6 +165,7 @@ body {
   font-size: 1.15rem;
   box-shadow: 0 4px 14px rgba(139, 92, 246, 0.35);
   flex-shrink: 0;
+  text-transform: uppercase;
 }
 
 .brand-info h1 {
@@ -164,15 +179,21 @@ body {
 }
 
 .brand-info .stock-tag {
-  background: rgba(59, 130, 246, 0.15);
-  color: var(--color-accent);
+  background: var(--tag-twse-bg);
+  color: var(--tag-twse);
   font-size: 0.8rem;
-  padding: 0.15rem 0.5rem;
+  padding: 0.15rem 0.55rem;
   border-radius: 6px;
   font-family: var(--font-mono);
   font-weight: 700;
   border: 1px solid rgba(59, 130, 246, 0.25);
   white-space: nowrap;
+}
+
+.brand-info .stock-tag.tpex {
+  background: var(--tag-tpex-bg);
+  color: var(--tag-tpex);
+  border-color: rgba(168, 85, 247, 0.25);
 }
 
 .brand-info p {
@@ -248,7 +269,257 @@ body {
   transform: translateY(-1px);
 }
 
-/* Layout */
+/* ==========================================================================
+   Stock Switcher & Search Bar (上市櫃切換專區)
+   ========================================================================== */
+.stock-search-bar {
+  background: var(--search-bar-bg);
+  border-bottom: 1px solid var(--border-color);
+  padding: 0.85rem 1.5rem;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.03);
+}
+
+.search-bar-container {
+  max-width: 1440px;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+.search-input-row {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex-wrap: wrap;
+}
+
+.search-input-group {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  min-width: 280px;
+  position: relative;
+}
+
+.search-input {
+  width: 100%;
+  background: var(--bg-primary);
+  border: 2px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  padding: 0.65rem 1rem 0.65rem 2.6rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  color: var(--text-main);
+  outline: none;
+  transition: all 0.2s ease;
+  min-height: 44px;
+}
+
+.search-input:focus {
+  border-color: var(--border-active);
+  box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.2);
+}
+
+.search-icon-inside {
+  position: absolute;
+  left: 0.85rem;
+  color: var(--text-dim);
+  font-size: 1.1rem;
+  pointer-events: none;
+}
+
+.search-autocomplete-dropdown {
+  position: absolute;
+  top: calc(100% + 6px);
+  left: 0;
+  right: 0;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-active);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 10px 25px -5px rgba(0, 0, 0, 0.3), 0 0 0 1px rgba(56, 189, 248, 0.2);
+  z-index: 1000;
+  max-height: 280px;
+  overflow-y: auto;
+  backdrop-filter: blur(12px);
+}
+
+.search-autocomplete-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.65rem 1rem;
+  cursor: pointer;
+  border-bottom: 1px solid var(--border-color);
+  transition: background 0.15s ease;
+}
+
+.search-autocomplete-item:last-child {
+  border-bottom: none;
+}
+
+.search-autocomplete-item:hover,
+.search-autocomplete-item.selected {
+  background: var(--bg-card-hover);
+}
+
+.search-autocomplete-item .stock-info {
+  display: flex;
+  align-items: center;
+  gap: 0.6rem;
+}
+
+.search-autocomplete-item .stock-name {
+  font-weight: 700;
+  color: var(--text-main);
+  font-size: 0.92rem;
+}
+
+.search-autocomplete-item .stock-code {
+  font-family: var(--font-mono);
+  font-weight: 600;
+  color: var(--color-accent);
+  font-size: 0.85rem;
+}
+
+.search-autocomplete-item .market-badge {
+  font-size: 0.72rem;
+  padding: 0.15rem 0.45rem;
+  border-radius: 4px;
+  font-weight: 700;
+}
+
+.btn-search-submit {
+  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  color: white;
+  border: none;
+  padding: 0.65rem 1.25rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.92rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+.btn-search-submit:hover {
+  background: linear-gradient(135deg, #2563eb, #1d4ed8);
+  transform: translateY(-1px);
+}
+
+.btn-add-watchlist {
+  background: var(--bg-card);
+  color: var(--text-main);
+  border: 1px solid var(--border-color);
+  padding: 0.65rem 1rem;
+  border-radius: var(--radius-sm);
+  font-size: 0.88rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: all 0.2s;
+  display: flex;
+  align-items: center;
+  gap: 0.35rem;
+  min-height: 44px;
+  white-space: nowrap;
+}
+
+.btn-add-watchlist:hover {
+  border-color: #f59e0b;
+  color: #f59e0b;
+}
+
+/* Quick Stock Chips (熱門與自選清單) */
+.quick-stock-chips {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  overflow-x: auto;
+  padding-bottom: 4px;
+  scrollbar-width: thin;
+}
+
+.quick-stock-chips::-webkit-scrollbar {
+  height: 4px;
+}
+.quick-stock-chips::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+.stock-chip {
+  background: var(--bg-card);
+  border: 1px solid var(--border-color);
+  color: var(--text-main);
+  padding: 0.35rem 0.75rem;
+  border-radius: 20px;
+  font-size: 0.82rem;
+  font-weight: 700;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  white-space: nowrap;
+  transition: all 0.2s ease;
+  flex-shrink: 0;
+}
+
+.stock-chip:hover {
+  background: var(--bg-card-hover);
+  border-color: var(--border-active);
+  transform: translateY(-1px);
+}
+
+.stock-chip.active {
+  background: rgba(59, 130, 246, 0.15);
+  border-color: #3b82f6;
+  color: #3b82f6;
+  box-shadow: 0 0 10px rgba(59, 130, 246, 0.25);
+}
+
+.stock-chip .chip-type-badge {
+  font-size: 0.7rem;
+  padding: 1px 5px;
+  border-radius: 4px;
+  font-family: var(--font-mono);
+  font-weight: 800;
+}
+
+.chip-type-twse {
+  background: var(--tag-twse-bg);
+  color: var(--tag-twse);
+}
+
+.chip-type-tpex {
+  background: var(--tag-tpex-bg);
+  color: var(--tag-tpex);
+}
+
+.stock-chip .chip-remove-btn {
+  color: var(--text-dim);
+  font-size: 0.75rem;
+  margin-left: 2px;
+  border-radius: 50%;
+  width: 16px;
+  height: 16px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  transition: color 0.15s;
+}
+
+.stock-chip .chip-remove-btn:hover {
+  color: #ef4444;
+  background: rgba(239, 68, 68, 0.15);
+}
+
+/* ==========================================================================
+   Main Layout
+   ========================================================================== */
 .main-container {
   max-width: 1440px;
   margin: 1.25rem auto;
@@ -887,8 +1158,8 @@ input:checked + .slider:before {
 }
 
 @keyframes slideIn {
-  from { transform: translateY(100%); opacity: 0; }
-  to { transform: translateY(0); opacity: 1; }
+  from { transform: translateX(100%); opacity: 0; }
+  to { transform: translateX(0); opacity: 1; }
 }
 
 /* Footer */
@@ -935,6 +1206,10 @@ canvas {
     padding: 0.75rem 1rem;
   }
   
+  .stock-search-bar {
+    padding: 0.75rem 1rem;
+  }
+
   .hero-grid {
     grid-template-columns: 1fr;
     gap: 1.25rem;
@@ -971,6 +1246,20 @@ canvas {
   .btn-icon {
     font-size: 0.78rem;
     padding: 0.4rem 0.65rem;
+  }
+
+  .search-input-row {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
+  .search-input-group {
+    min-width: 100%;
+  }
+
+  .btn-search-submit, .btn-add-watchlist {
+    width: 100%;
+    justify-content: center;
   }
 
   .main-container {
