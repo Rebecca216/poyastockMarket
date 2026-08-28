@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-TW" data-theme="light">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>寶雅 (5904) 股市即時低價觀察與智慧通知系統</title>
+  <meta name="description" content="寶雅 (5904) 股市即時五檔報價、分時走勢與自訂低價警示通知系統，支援桌面推播、音效與醒目彈窗。">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+</head>
+<body>
+  <!-- Header -->
+  <header class="header">
+    <div class="header-container">
+      <div class="brand">
+        <div class="logo-badge">PO</div>
+        <div class="brand-info">
+          <h1>
+            寶雅 POUYA
+            <span class="stock-tag">5904.TWO (上櫃)</span>
+          </h1>
+          <p id="headerSubText">即時行情低價觀察與智慧警示儀表板</p>
+        </div>
+      </div>
+      <div class="header-actions">
+        <div class="status-badge" id="marketStatusBadge">
+          <span class="pulse-dot" id="marketDot"></span>
+          <span id="marketStatusText">連線中...</span>
+        </div>
+        <button class="btn-icon" id="btnReqNotification" title="開啟瀏覽器桌面通知">
+          <span>🔔</span>
+          <span id="notifyBtnText">啟用桌面推播</span>
+        </button>
+        <button class="btn-icon" id="btnToggleSound" title="聲音開關">
+          <span id="soundIcon">🔊</span>
+          <span id="soundText">聲音開</span>
+        </button>
+        <button class="btn-icon" id="btnThemeToggle" title="切換主題">
+          <span id="themeIcon">☀️</span>
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- Main Content -->
+  <main class="main-container">
+    <!-- Left Column: Real-time Quote & Orderbook -->
+    <div class="content-left">
+      <!-- Hero Stock Price Card -->
+      <section class="card price-hero-card">
+        <div class="card-header">
+          <span class="card-title">
+            <span>📈</span> 寶雅 (5904) 即時報價
+          </span>
+          <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
+            最後更新：<span id="lastUpdateTime" style="font-family: var(--font-mono); font-weight: 700; color: var(--text-main);">--:--:--</span>
+          </div>
+        </div>
+        <div class="hero-grid">
+          <div class="price-main-display">
+            <div class="price-meta-label">
+              <span>成交價 (Current Price)</span>
+            </div>
+            <div class="price-big-number" id="currentPriceDisplay">--.--</div>
+            <div>
+              <span class="price-change-pill bg-flat" id="priceChangeDisplay">-- (0.00%)</span>
+            </div>
+          </div>
+          <div class="market-stats-row">
+            <div class="stat-item">
+              <span class="stat-label">最佳買價 (Bid)</span>
+              <span class="stat-value text-up" id="bestBidDisplay">--.--</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">最佳賣價 (Ask)</span>
+              <span class="stat-value text-down" id="bestAskDisplay">--.--</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">今日最高 (High)</span>
+              <span class="stat-value text-up" id="dayHighDisplay">--.--</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">今日最低 (Low)</span>
+              <span class="stat-value text-down" id="dayLowDisplay">--.--</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">開盤價 (Open)</span>
+              <span class="stat-value" id="openPriceDisplay">--.--</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">昨收價 (Prev Close)</span>
+              <span class="stat-value" id="prevCloseDisplay">--.--</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">成交總量 (Volume)</span>
+              <span class="stat-value" id="totalVolumeDisplay">-- 張</span>
+            </div>
+            <div class="stat-item">
+              <span class="stat-label">成交總額 (Turnover)</span>
+              <span class="stat-value" id="turnoverDisplay">-- 億</span>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- 5-Tier Order Book (五檔委買委賣) -->
+      <section class="card">
+        <div class="card-header">
+          <span class="card-title">
+            <span>⚖️</span> 即時最佳五檔買賣價量 (Order Book)
+          </span>
+          <span style="font-size: 0.8rem; color: var(--text-dim); font-weight: 600;">單位：張 / 元</span>
+        </div>
+        <div class="orderbook-grid">
+          <!-- Bid Side (買盤) -->
+          <div class="orderbook-col">
+            <h4>
+              <span style="color: var(--color-up); font-weight: 800;">🟢 委買盤 (Bid 買一~買五)</span>
+              <span id="sumBidVolText" style="font-size: 0.82rem; color: var(--text-main); font-weight: 700;">買盤合計: -- 張</span>
+            </h4>
+            <table class="orderbook-table">
+              <thead>
+                <tr>
+                  <th style="text-align: left; padding: 6px 10px; color: var(--text-muted);">委買量 (張)</th>
+                  <th style="text-align: right; padding: 6px 10px; color: var(--text-muted);">委買價 (元)</th>
+                </tr>
+              </thead>
+              <tbody id="bidTableBody">
+                <tr><td colspan="2" style="text-align: center; color: var(--text-muted); padding: 1rem;">載入中...</td></tr>
+              </tbody>
+            </table>
+          </div>
+
+          <!-- Ask Side (賣盤) -->
+          <div class="orderbook-col">
+            <h4>
+              <span style="color: var(--color-down); font-weight: 800;">🔴 委賣盤 (Ask 賣一~賣五)</span>
+              <span id="sumAskVolText" style="font-size: 0.82rem; color: var(--text-main); font-weight: 700;">賣盤合計: -- 張</span>
+            </h4>
+            <table class="orderbook-table">
+              <thead>
+                <tr>
+                  <th style="text-align: left; padding: 6px 10px; color: var(--text-muted);">委賣價 (元)</th>
+                  <th style="text-align: right; padding: 6px 10px; color: var(--text-muted);">委賣量 (張)</th>
+                </tr>
+              </thead>
+              <tbody id="askTableBody">
+                <tr><td colspan="2" style="text-align: center; color: var(--text-muted); padding: 1rem;">載入中...</td></tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- Today's Price Trend Canvas -->
+      <section class="card">
+        <div class="card-header">
+          <span class="card-title">
+            <span>📊</span> 今日盤中走勢與低價警戒線
+          </span>
+          <span style="font-size: 0.85rem; color: var(--color-warning); font-weight: 700;" id="chartAlertLineLegend">
+            🟡 低價警戒線：-- 元
+          </span>
+        </div>
+        <div class="chart-container">
+          <canvas id="trendChart"></canvas>
+        </div>
+      </section>
+    </div>
+
+    <!-- Right Sidebar: Low Price Alert Configuration -->
+    <aside class="sidebar-right">
+      <!-- Alert Settings Card -->
+      <section class="card alert-panel">
+        <div class="card-header">
+          <span class="card-title" style="color: var(--color-warning);">
+            <span>⚡</span> 自訂低價通知設定
+          </span>
+        </div>
+
+        <div class="alert-status-banner">
+          <div class="status-indicator">
+            <span id="alertActiveDot" style="width: 10px; height: 10px; border-radius: 50%; background: #10b981; display: inline-block;"></span>
+            <span id="alertActiveText">監控中：門檻 <strong id="currentThresholdView" style="color: var(--color-warning);">74.0</strong> 元</span>
+          </div>
+          <span style="font-size: 0.78rem; background: var(--color-warning-bg); color: var(--color-warning); padding: 3px 8px; border-radius: 6px; border: 1px solid var(--color-warning-border); font-weight: 800;">啟用中</span>
+        </div>
+
+        <!-- Target Price Form -->
+        <div class="form-group">
+          <label class="form-label" for="targetPriceInput">🎯 設定低價觸發門檻 (Target Low Price)</label>
+          <div class="input-with-unit">
+            <input type="number" step="0.1" id="targetPriceInput" class="price-input" value="74.0" placeholder="例如 74.0">
+            <span class="input-unit">NT$</span>
+          </div>
+          <!-- Quick Price Helper Chips -->
+          <div class="quick-set-chips">
+            <button class="chip-btn" id="chipMinus05">-0.5 元</button>
+            <button class="chip-btn" id="chipMinus1">-1.0 元</button>
+            <button class="chip-btn" id="chipMinus2Percent">-2%</button>
+            <button class="chip-btn" id="chipCurrentPrice">設為現價</button>
+          </div>
+        </div>
+
+        <!-- Condition Rule -->
+        <div class="form-group">
+          <label class="form-label" for="alertConditionSelect">🔍 觸發判斷條件</label>
+          <select id="alertConditionSelect" class="alert-condition-select">
+            <option value="price_or_ask" selected>當「成交價」或「委賣價 Ask」≤ 設定價格 (最推薦)</option>
+            <option value="price_le">當「成交價」≤ 設定價格</option>
+            <option value="ask_le">當「委賣價 Ask」≤ 設定價格 (代表可直接以低價買入)</option>
+            <option value="bid_le">當「委買價 Bid」≤ 設定價格</option>
+            <option value="any_orderbook">五檔任一買賣報價 ≤ 設定價格</option>
+          </select>
+        </div>
+
+        <!-- Notification Options -->
+        <div class="form-group">
+          <label class="form-label">🔔 通知提醒方式</label>
+          <label class="switch-label">
+            <span>瀏覽器桌面彈出通知 (Web Notification)</span>
+            <label class="switch">
+              <input type="checkbox" id="chkWebNotification" checked>
+              <span class="slider"></span>
+            </label>
+          </label>
+          <label class="switch-label">
+            <span>全螢幕醒目警示彈窗 (Alarm Modal)</span>
+            <label class="switch">
+              <input type="checkbox" id="chkModalAlert" checked>
+              <span class="slider"></span>
+            </label>
+          </label>
+          <label class="switch-label">
+            <span>警示音效提醒 (Audio Chime)</span>
+            <label class="switch">
+              <input type="checkbox" id="chkSoundAlert" checked>
+              <span class="slider"></span>
+            </label>
+          </label>
+        </div>
+
+        <!-- Cooldown Setting -->
+        <div class="form-group">
+          <label class="form-label" for="cooldownSelect">⏱️ 防洗版提醒冷卻時間</label>
+          <select id="cooldownSelect" class="alert-condition-select">
+            <option value="60000">1 分鐘提醒一次</option>
+            <option value="180000" selected>3 分鐘提醒一次</option>
+            <option value="300000">5 分鐘提醒一次</option>
+            <option value="0">每次價格符合皆提醒 (即時)</option>
+          </select>
+        </div>
+
+        <button class="btn-primary" id="btnSaveAlert">
+          <span>💾</span> 儲存設定並同步監控
+        </button>
+
+        <button class="btn-outline" id="btnTestAlert">
+          <span>🔔</span> 立即模擬測試通知音效與彈窗
+        </button>
+      </section>
+
+      <!-- Alert Triggered History -->
+      <section class="card">
+        <div class="card-header">
+          <span class="card-title">
+            <span>📋</span> 觸發紀錄 (Alert Logs)
+          </span>
+          <button class="btn-icon" id="btnClearLogs" style="padding: 2px 8px; font-size: 0.78rem;">清除</button>
+        </div>
+        <div class="logs-list" id="alertLogsContainer">
+          <div style="text-align: center; color: var(--text-dim); padding: 1rem; font-size: 0.82rem; font-weight: 500;">
+            目前尚無觸發紀錄。當股價達到設定門檻時將自動記錄於此。
+          </div>
+        </div>
+      </section>
+
+      <!-- System Control Card -->
+      <section class="card">
+        <div class="card-header">
+          <span class="card-title">
+            <span>⚙️</span> 更新設定
+          </span>
+        </div>
+        <div style="display: flex; flex-direction: column; gap: 0.75rem;">
+          <div style="display: flex; justify-content: space-between; align-items: center; font-size: 0.86rem; font-weight: 600;">
+            <span style="color: var(--text-muted);">自動更新頻率:</span>
+            <select id="refreshRateSelect" class="alert-condition-select" style="width: auto; padding: 4px 10px; font-weight: 700;">
+              <option value="1000" selected>⚡ 1 秒 (超極速)</option>
+              <option value="2000">🚀 2 秒 (極速)</option>
+              <option value="3000">🏃 3 秒 (快速)</option>
+              <option value="5000">⏱️ 5 秒 (標準)</option>
+            </select>
+          </div>
+          <button class="btn-outline" id="btnManualRefresh">
+            <span>🔄</span> 立即手動刷新行情
+          </button>
+        </div>
+      </section>
+    </aside>
+  </main>
+
+  <!-- Modal Alert Triggered Popup -->
+  <div class="modal-backdrop" id="alertModalBackdrop">
+    <div class="modal-box">
+      <div class="modal-icon">🚨</div>
+      <h2 class="modal-title">寶雅 (5904) 低價買進通知！</h2>
+      <p class="modal-content-text" id="modalAlertDesc">
+        當前股價已觸及或低於您設定的低價門檻！
+      </p>
+      <div>
+        <span class="modal-price-badge" id="modalAlertPrice">--.-- 元</span>
+      </div>
+      <button class="modal-btn" id="btnCloseModal">我知道了 (Dismiss)</button>
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div class="toast-container" id="toastContainer"></div>
+
+  <!-- Footer -->
+  <footer class="footer">
+    <p>寶雅 (5904) 即時股市低價觀察系統 · 資料來源：台灣證券交易所 / 證券櫃檯買賣中心 / Yahoo 股市 API</p>
+    <p style="margin-top: 0.25rem;">提醒：本系統提供之報價資訊僅供參考，實際交易請以各券商下單系統為準。</p>
+  </footer>
+
+  <script src="app.js"></script>
+</body>
+</html>
