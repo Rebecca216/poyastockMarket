@@ -24,25 +24,25 @@
   let stockData = {
     symbol: '5904.TWO',
     name: '寶雅',
-    price: 74.3,
-    change: 0.2,
-    changePercent: '0.27%',
-    changeStatus: 'up', // 'up', 'down', 'flat'
-    bid: 74.2,
-    ask: 74.4,
+    price: 73.8,
+    change: -0.3,
+    changePercent: '-0.40%',
+    changeStatus: 'down', // 'up', 'down', 'flat'
+    bid: 73.7,
+    ask: 73.8,
     high: 75.5,
-    low: 74.2,
+    low: 73.6,
     open: 74.4,
     prevClose: 74.1,
-    volume: 1366,
-    turnoverM: 102.03,
+    volume: 4028,
+    turnoverM: 299.03,
     updatedAt: new Date(),
     orderbook: [
-      { bid: 74.2, bidVol: 46, ask: 74.4, askVol: 14 },
-      { bid: 74.1, bidVol: 103, ask: 74.5, askVol: 39 },
-      { bid: 74.0, bidVol: 256, ask: 74.6, askVol: 29 },
-      { bid: 73.9, bidVol: 70, ask: 74.7, askVol: 34 },
-      { bid: 73.8, bidVol: 71, ask: 74.8, askVol: 56 }
+      { bid: 73.7, bidVol: 130, ask: 73.8, askVol: 34 },
+      { bid: 73.6, bidVol: 283, ask: 73.9, askVol: 23 },
+      { bid: 73.5, bidVol: 469, ask: 74.0, askVol: 56 },
+      { bid: 73.4, bidVol: 87, ask: 74.1, askVol: 67 },
+      { bid: 73.3, bidVol: 77, ask: 74.2, askVol: 55 }
     ]
   };
 
@@ -154,7 +154,7 @@
       const saved = localStorage.getItem(STORAGE_KEY);
       if (saved) {
         config = Object.assign(config, JSON.parse(saved));
-        if (!config.refreshInterval || config.refreshInterval > 5000) {
+        if (!config.refreshInterval || config.refreshInterval > 5000 || config.refreshInterval < 500) {
           config.refreshInterval = 1000;
         }
       }
@@ -476,7 +476,10 @@
     el.openPriceDisplay.textContent = stockData.open ? stockData.open.toFixed(1) : '--';
     el.prevCloseDisplay.textContent = stockData.prevClose ? stockData.prevClose.toFixed(1) : '--';
     el.totalVolumeDisplay.textContent = stockData.volume.toLocaleString() + ' 張';
-    el.turnoverDisplay.textContent = stockData.turnoverM + ' 億';
+    
+    // turnoverM is in Million NTD (百萬元)，convert to 億元
+    const turnoverInYi = stockData.turnoverM ? (stockData.turnoverM / 100).toFixed(2) : '--';
+    el.turnoverDisplay.textContent = turnoverInYi + ' 億';
 
     renderOrderbook();
 
