@@ -3,8 +3,8 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title id="pageDocTitle">台股即時低價觀察與智慧通知系統</title>
-  <meta name="description" content="台股上市櫃即時五檔報價、分時走勢與自訂低價警示通知系統，支援多股切換、桌面推播、音效與醒目彈窗。">
+  <title>寶雅 (5904) 股市即時低價觀察與智慧通知系統</title>
+  <meta name="description" content="寶雅 (5904) 股市即時五檔報價、分時走勢與自訂低價警示通知系統，支援桌面推播、音效與醒目彈窗。">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@500;700;800&family=Noto+Sans+TC:wght@400;500;700;900&display=swap" rel="stylesheet">
@@ -15,14 +15,13 @@
   <header class="header">
     <div class="header-container">
       <div class="brand">
-        <div class="logo-badge" id="brandLogoBadge">PO</div>
+        <div class="logo-badge">PO</div>
         <div class="brand-info">
-          <h1 id="brandStockHeading">
-            <span id="brandStockNameText">寶雅</span>
-            <span id="brandStockSubText" style="font-size: 0.95rem; font-weight: 700; color: var(--text-muted); margin-left: 4px;">POUYA</span>
-            <span class="stock-tag tpex" id="brandStockTag">5904.TWO (上櫃)</span>
+          <h1>
+            寶雅 POUYA
+            <span class="stock-tag">5904.TWO (上櫃)</span>
           </h1>
-          <p id="headerSubText">台股上市櫃即時低價觀察與智慧警示儀表板</p>
+          <p id="headerSubText">即時行情低價觀察與智慧警示儀表板</p>
         </div>
       </div>
       <div class="header-actions">
@@ -45,29 +44,6 @@
     </div>
   </header>
 
-  <!-- Stock Search & Quick Switcher Bar (上市櫃切換專區) -->
-  <section class="stock-search-bar">
-    <div class="search-bar-container">
-      <div class="search-input-row">
-        <div class="search-input-group">
-          <span class="search-icon-inside">🔍</span>
-          <input type="text" id="stockSearchInput" class="search-input" placeholder="輸入台股代碼或名稱 (例如 2330, 2317, 5904, 3293, 2454, 0050...)" autocomplete="off">
-          <div class="search-autocomplete-dropdown" id="searchAutocomplete" style="display: none;"></div>
-        </div>
-        <button id="btnSwitchStock" class="btn-search-submit">
-          <span>🚀</span> 切換觀察
-        </button>
-        <button id="btnAddWatchlist" class="btn-add-watchlist" title="將當前股票加入快捷自選清單">
-          <span id="starIcon">⭐</span> <span id="addWatchlistText">加入自選</span>
-        </button>
-      </div>
-      <!-- Horizontally Scrollable Watchlist & Preset Chips -->
-      <div class="quick-stock-chips" id="quickStockChips">
-        <!-- Rendered dynamically by app.js -->
-      </div>
-    </div>
-  </section>
-
   <!-- Main Content -->
   <main class="main-container">
     <!-- Left Column: Real-time Quote & Orderbook -->
@@ -76,7 +52,7 @@
       <section class="card price-hero-card">
         <div class="card-header">
           <span class="card-title">
-            <span>📈</span> <span id="heroCardStockTitle">寶雅 (5904) 即時報價</span>
+            <span>📈</span> 寶雅 (5904) 即時報價
           </span>
           <div style="font-size: 0.85rem; color: var(--text-muted); font-weight: 600;">
             最後更新：<span id="lastUpdateTime" style="font-family: var(--font-mono); font-weight: 700; color: var(--text-main);">--:--:--</span>
@@ -214,9 +190,7 @@
 
         <!-- Target Price Form -->
         <div class="form-group">
-          <label class="form-label" for="targetPriceInput">
-            🎯 設定 <span id="targetPriceStockLabel" style="color: var(--color-accent); font-weight: 800;">寶雅</span> 低價觸發門檻
-          </label>
+          <label class="form-label" for="targetPriceInput">🎯 設定寶雅 (5904) 低價觸發門檻</label>
           <div class="input-with-unit">
             <input type="number" step="0.1" id="targetPriceInput" class="price-input" value="74.0" placeholder="例如 74.0">
             <span class="input-unit">NT$</span>
@@ -332,9 +306,9 @@
   <div class="modal-backdrop" id="alertModalBackdrop">
     <div class="modal-box">
       <div class="modal-icon">🚨</div>
-      <h2 class="modal-title" id="modalAlertHeading">低價買進通知！</h2>
+      <h2 class="modal-title" id="modalAlertHeading">寶雅 (5904) 低價買進通知！</h2>
       <p class="modal-content-text" id="modalAlertDesc">
-        當前股價已觸及或低於您設定的低價門檻！
+        當前寶雅股價已觸及或低於您設定的低價門檻！
       </p>
       <div>
         <span class="modal-price-badge" id="modalAlertPrice">--.-- 元</span>
@@ -348,7 +322,7 @@
 
   <!-- Footer -->
   <footer class="footer">
-    <p>台股上市櫃即時股市低價觀察系統 · 資料來源：台灣證券交易所 (TWSE) / 證券櫃檯買賣中心 (TPEx) / Yahoo 股市 API</p>
+    <p>寶雅 (5904) 股市即時低價觀察系統 · 資料來源：證券櫃檯買賣中心 (TPEx) / Yahoo 股市 API</p>
     <p style="margin-top: 0.25rem;">提醒：本系統提供之報價資訊僅供參考，實際交易請以各券商下單系統為準。</p>
   </footer>
 
